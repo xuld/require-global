@@ -1,6 +1,6 @@
 {
     "name": "require-global",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Allow node.js to load global modules from custom paths | 令 NodeJs 支持从自定义路径加载全局模块",
     "keywords": [
         "require",

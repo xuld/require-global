@@ -38,7 +38,7 @@
  * requireGlobal("D:\\Node\\node_modules") // 支持令 require 加载指定目录下的模块。
  */
 function requireGlobal(paths){
-	paths = paths ? Array.isArray(paths) ? path : [path] : [__dirname.replace(/([\/\\])[^\/\\]*$/, '$1')];
+	paths = paths ? Array.isArray(paths) ? paths : [paths] : [__dirname.replace(/([\/\\])[^\/\\]*$/, '$1')];
 	var Module = module.constructor;
 	if(!Module._resolveLookupPaths){
 		throw new Error("requireGlobal is currently not supported for Nodejs " + process.version);
