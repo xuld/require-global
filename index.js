@@ -1,17 +1,41 @@
+/*
+ * Copyright (C) 2015 xuld<xuld@vip.qq.com>
+ *
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, 
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software, 
+ * and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions:
+ *ã€€
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+ *
+ */
+
 // Allow NodeJs to load modules from custom directories.
 
-// Ê¹ NodeJs Ö§³Ö´ÓÖ¸¶¨Â·¾¶ÔØÈëÈ«¾ÖÄ£¿é¡£
-// Ä¬ÈÏÖ§³Ö´Ó Node ½ø³ÌËùÔÚÂ·¾¶µÄ node_modules ¼ÓÔØÄ£¿é¡£
+// ä½¿ NodeJs æ”¯æŒä»æŒ‡å®šè·¯å¾„è½½å…¥å…¨å±€æ¨¡å—ã€‚
+// é»˜è®¤æ”¯æŒä» Node è¿›ç¨‹æ‰€åœ¨è·¯å¾„çš„ node_modules åŠ è½½æ¨¡å—ã€‚
 
-// ²Î¿¼£º
+// å‚è€ƒï¼š
 // https://github.com/nodejs/node/blob/master/lib/module.js
 
 /**
- * ÆôÓÃ require È«¾ÖËÑË÷Â·¾¶¡£
- * @param {String/Array} [paths] ÉèÖÃ require ËÑË÷µÄÂ·¾¶¡£Ä¬ÈÏÎª require-global Ä£¿é±¾ÉíËùÔÚÂ·¾¶¡£
+ * å¯ç”¨ require å…¨å±€æœç´¢è·¯å¾„ã€‚
+ * @param {String/Array} [paths] è®¾ç½® require æœç´¢çš„è·¯å¾„ã€‚é»˜è®¤ä¸º require-global æ¨¡å—æœ¬èº«æ‰€åœ¨è·¯å¾„ã€‚
  * @example 
- * requireGlobal() // Ö§³ÖÁî require Ö±½Ó¼ÓÔØ require-global Ä£¿é±¾ÉíËùÔÚÂ·¾¶¡£
- * requireGlobal("D:\\Node\\node_modules") // Ö§³ÖÁî require ¼ÓÔØÖ¸¶¨Ä¿Â¼ÏÂµÄÄ£¿é¡£
+ * requireGlobal() // æ”¯æŒä»¤ require ç›´æ¥åŠ è½½ require-global æ¨¡å—æœ¬èº«æ‰€åœ¨è·¯å¾„ã€‚
+ * requireGlobal("D:\\Node\\node_modules") // æ”¯æŒä»¤ require åŠ è½½æŒ‡å®šç›®å½•ä¸‹çš„æ¨¡å—ã€‚
  */
 function requireGlobal(paths){
 	paths = paths ? Array.isArray(paths) ? path : [path] : [__dirname.replace(/([\/\\])[^\/\\]*$/, '$1')];

@@ -1,49 +1,32 @@
-Global-Shim
+Require-global
 ===================================
 
 Allow node.js to load global modules from custom paths
 
+	> npm install -g require-global
+
 ## Examples
 
-The code below fails because The grunt module is not installed in current path
-	
-	> npm install grunt -g
-	> node
-	require('grunt') // Error: Cannot find module 'grunt'
-	
-The module 'global-shim' fixes it.
+### Load modules from the path where require-global locates.
 
-	> npm install grunt -g
-	> npm install global-shim --save-dev
-	> node
-	require('global-shim')()
-	require('grunt') // Success
-	
-## How it works
+	require('require-global')()
 
-'global-shim' hacks the internal method of require. It adds the path of node itself, where the global modules is installed, when resolving paths.
-	
+### Load modules from custom path.
+
+	require('require-global')("D:\mywork\node_modules")
+
 --------------------------------------------
 
-Áî NodeJs Ö§³Ö´Ó×Ô¶¨ÒåÂ·¾¶¼ÓÔØÈ«¾ÖÄ£¿é
+ä»¤ NodeJs æ”¯æŒä»è‡ªå®šä¹‰è·¯å¾„åŠ è½½æ¨¡å—ã€‚
 
-## Ê¾Àı
+	> npm install -g require-global
 
-ÒÔÏÂ´úÂë»á³öÏÖ´íÎó£¬ÒòÎª grunt Ä£¿éÃ»ÓĞÔÚ±¾µØ°²×°
+## ç¤ºä¾‹
 
-	> npm install grunt -g
-	> node
-	require('grunt') // Error: Cannot find module 'grunt'
-	
-'global-shim' Ä£¿é¿ÉÒÔĞŞ¸´Ëü£º
+### è®© Node èƒ½ä» require-global æ‰€åœ¨ç›®å½•åŠ è½½å…¶å®ƒæ¨¡å—ã€‚
 
-	> npm install grunt -g
-	> npm install global-shim --save-dev
-	> node
-	require('global-shim')()
-	require('grunt') // Success
-	
-## Ô­Àí
+	require('require-global')()
 
-'global-shim' »á¸ü¸Ä nodejs ÄÚ²¿Ä£¿é¼ÓÔØ·½Ê½£¬ÈÃËü³¢ÊÔÈ¥¼ÓÔØ node ³ÌĞò±¾ÉíËùÔÚÄ¿Â¼µÄ node_modules¡£Ö»ÒªÊÇÈ«¾Ö°²×°µÄÄ£¿é£¬¶¼¿ÉÒÔË³Àû¼ÓÔØ¡£
+### è®© Node èƒ½ä»è‡ªå®šä¹‰ç›®å½•åŠ è½½å…¶å®ƒæ¨¡å—ã€‚
 
+	require('require-global')("D:\mywork\node_modules")
