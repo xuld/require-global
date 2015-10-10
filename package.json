@@ -1,29 +1,32 @@
 {
-  "name": "require-global",
-  "version": "1.0.1",
-  "description": "Allow node.js to load global modules from custom paths | 令 NodeJs 支持从自定义路径加载全局模块",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/xuld/require-global.git"
-  },
-  "keywords": [
-    "utils",
-    "language extension"
-  ],
-  "author": {
-    "name": "xuld",
-    "email": "xuld@vip.qq.com"
-  },
-  "bugs": {
-    "url": "https://github.com/xuld/require-global/issues"
-  },
-  "homepage": "https://github.com/xuld/require-global#readme",
-  "scripts": {},
-  "maintainers": [
-    {
-      "name": "xuld",
-      "email": "xuld@vip.qq.com"
-    }
-  ],
-  "directories": {}
+    "name": "require-global",
+    "version": "1.0.2",
+    "description": "Allow node.js to load global modules from custom paths | 令 NodeJs 支持从自定义路径加载全局模块",
+    "keywords": [
+        "require",
+        "global",
+        "node_modules"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/xuld/require-global.git"
+    },
+    "author": {
+        "name": "xuld",
+        "email": "xuld@vip.qq.com"
+    },
+    "bugs": {
+        "url": "https://github.com/xuld/require-global/issues",
+        "email": "xuld@vip.qq.com"
+    },
+    "homepage": "https://github.com/xuld/require-global#readme",
+    "license": "MIT",
+    "scripts": { },
+    "maintainers": [
+        {
+            "name": "xuld",
+            "email": "xuld@vip.qq.com"
+        }
+    ],
+    "directories": { }
 }
