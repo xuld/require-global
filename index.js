@@ -6,26 +6,29 @@
 // 参考：
 // https://github.com/nodejs/node/blob/master/lib/module.js
 
-function globalShim(paths){
-	paths = paths || [process.execPath.replace(/([\/\\])[^\/\\]*$/, '$1node_modules')];
+/**
+ * 启用 require 全局搜索路径。
+ * @param {String/Array} [paths] 设置 require 搜索的路径。默认为 require-global 模块本身所在路径。
+ * @example 
+ * requireGlobal() // 支持令 require 直接加载 require-global 模块本身所在路径。
+ * requireGlobal("D:\\Node\\node_modules") // 支持令 require 加载指定目录下的模块。
+ */
+function requireGlobal(paths){
+	paths = paths ? Array.isArray(paths) ? path : [path] : [__dirname.replace(/([\/\\])[^\/\\]*$/, '$1')];
 	var Module = module.constructor;
 	if(!Module._resolveLookupPaths){
-		throw new Error("globalShim is currently not supported for Nodejs " + process.version);
+		throw new Error("requireGlobal is currently not supported for Nodejs " + process.version);
 	}
-	if(Module._resolveLookupPaths.paths){
-		Module._resolveLookupPaths.paths.push.apply(Module._resolveLookupPaths.paths, paths);
-		return;
+	if(!requireGlobal.paths){
+		requireGlobal.paths = [];
+		Module.__resolveLookupPaths = Module._resolveLookupPaths;
+		Module._resolveLookupPaths = function(request, parent){
+			var result = Module.__resolveLookupPaths(request, parent);
+			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], requireGlobal.paths);
+			return result;
+		};
 	}
-	Module.__resolveLookupPaths = Module._resolveLookupPaths;
-	Module._resolveLookupPaths = function(request, parent){
-		var result = Module.__resolveLookupPaths(request, parent);
-		var start = request.substring(0, 2);
-		if (start !== './' && start !== '..') {
-			result[1].push.apply(result[1], Module._resolveLookupPaths.paths);
-		}
-		return result;
-	};
-	Module._resolveLookupPaths.paths = paths;
+	requireGlobal.paths.push.apply(requireGlobal.paths, paths);
 }
 
-module.exports = globalShim;
+module.exports = requireGlobal;
