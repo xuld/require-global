@@ -43,16 +43,16 @@ function requireGlobal(paths){
 	if(!Module._resolveLookupPaths){
 		throw new Error("requireGlobal is currently not supported for Nodejs " + process.version);
 	}
-	if(!requireGlobal.paths){
-		requireGlobal.paths = [];
+	if(!Module._requireGlobal_lookupPaths) {
+		Module._requireGlobal_lookupPaths = [];
 		Module.__resolveLookupPaths = Module._resolveLookupPaths;
 		Module._resolveLookupPaths = function(request, parent){
 			var result = Module.__resolveLookupPaths(request, parent);
-			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], requireGlobal.paths);
+			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], Module._requireGlobal_lookupPaths);
 			return result;
 		};
 	}
-	requireGlobal.paths.push.apply(requireGlobal.paths, paths);
+	Module._requireGlobal_lookupPaths.push.apply(Module._requireGlobal_lookupPaths, paths);
 }
 
 module.exports = requireGlobal;
