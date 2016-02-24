@@ -50,7 +50,7 @@ function requireGlobal(paths){
 			var npmRc = require('osenv').home() + "/.npmrc";
 			var c = require('fs').readFileSync(npmRc, 'utf-8');
 			var m = /^\s*prefix\s*=(.*)$/m.exec(c);
-			m && searchPaths.push(m[1].trim());
+			m && searchPaths.push(require('path').join(m[1].trim(), "node_modules"));
         } catch (e) { }
         try {
             searchPaths.push(require('path').resolve(process.execPath, '../node_modules'));
