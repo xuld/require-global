@@ -32,6 +32,42 @@
  * requireGlobal() // 支持令 require 直接加载 require-global 模块本身所在路径。
  * requireGlobal("D:\\Node\\node_modules") // 支持令 require 加载指定目录下的模块。
  */
+function requireGlobal(){
+	var Module = module.constructor;
+	if(!Module._resolveLookupPaths){
+        console.warn("requireGlobal is currently not supported for Nodejs " + process.version);
+        return;
+	}
+	
+	var paths = Module._requireGlobal_lookupPaths;
+	if(!paths) {
+		Module._requireGlobal_lookupPaths = paths = [];
+        try {
+           paths.push(require('path').resolve(require('which').sync("npm"), '../node_modules'));
+        } catch (e) { }
+        try {
+            paths.push(require('path').resolve(process.execPath, '../node_modules'));
+        } catch (e) { }
+		Module.__resolveLookupPaths = Module._resolveLookupPaths;
+		Module._resolveLookupPaths = function(request, parent){
+			var result = Module.__resolveLookupPaths(request, parent);
+			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], Module._requireGlobal_lookupPaths);
+			return result;
+		};
+	}
+	
+	paths.push.apply(paths, arguments);
+	
+    for (var i = paths.length - 1; i > 0; i--) {
+        for (var j = i - 1; j >= 0; j--) {
+            if (paths[j] == paths[i]) {
+                paths.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+}
 function requireGlobal() {
     var Module = module.constructor;
     if (!Module._resolveLookupPaths) {
