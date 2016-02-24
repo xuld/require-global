@@ -27,88 +27,52 @@
 
 /**
  * 使 NodeJs 能 require 载入全局安装的模块。
- * @param {String/Array} ... 设置 require 搜索的路径。默认为 require-global 模块本身所在路径。
+ * @param {String|Array} paths 设置 require 搜索的路径。默认为 require-global 模块本身所在路径。
  * @example 
  * requireGlobal() // 支持令 require 直接加载 require-global 模块本身所在路径。
  * requireGlobal("D:\\Node\\node_modules") // 支持令 require 加载指定目录下的模块。
  */
-function requireGlobal(){
+function requireGlobal(paths){
 	var Module = module.constructor;
-	if(!Module._resolveLookupPaths){
+	if(!Module._resolveLookupsearchPaths){
         console.warn("requireGlobal is currently not supported for Nodejs " + process.version);
         return;
 	}
 	
-	var paths = Module._requireGlobal_lookupPaths;
-	if(!paths) {
-		Module._requireGlobal_lookupPaths = paths = [];
+	var searchPaths = Module._requireGlobal_lookupsearchPaths;
+	if(!searchPaths) {
+		Module._requireGlobal_lookupsearchPaths = searchPaths = [];
         try {
-           paths.push(require('path').resolve(require('which').sync("npm"), '../node_modules'));
+           searchPaths.push(require('path').resolve(require('which').sync("npm"), '../node_modules'));
         } catch (e) { }
         try {
-            paths.push(require('path').resolve(process.execPath, '../node_modules'));
+            searchPaths.push(require('path').resolve(process.execPath, '../node_modules'));
         } catch (e) { }
-		Module.__resolveLookupPaths = Module._resolveLookupPaths;
-		Module._resolveLookupPaths = function(request, parent){
-			var result = Module.__resolveLookupPaths(request, parent);
-			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], Module._requireGlobal_lookupPaths);
+		Module.__resolveLookupsearchPaths = Module._resolveLookupsearchPaths;
+		Module._resolveLookupsearchPaths = function(request, parent){
+			var result = Module.__resolveLookupsearchPaths(request, parent);
+			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], Module._requireGlobal_lookupsearchPaths);
 			return result;
 		};
 	}
 	
-	paths.push.apply(paths, arguments);
+	if(paths){
+		if(typeof paths === "string"){
+			searchPaths.push(paths);
+		} else {
+			searchPaths.push.apply(searchPaths, paths);
+		}
+	}
 	
-    for (var i = paths.length - 1; i > 0; i--) {
+    for (var i = searchPaths.length - 1; i > 0; i--) {
         for (var j = i - 1; j >= 0; j--) {
-            if (paths[j] == paths[i]) {
-                paths.splice(i, 1);
+            if (searchPaths[j] == searchPaths[i]) {
+                searchPaths.splice(i, 1);
                 break;
             }
         }
     }
-
-}
-function requireGlobal() {
-    var Module = module.constructor;
-    if (!Module._resolveLookupPaths) {
-        console.warn("requireGlobal is currently not supported for Nodejs " + process.version);
-        return;
-    }
-
-    if (!requireGlobal.paths) {
-        requireGlobal.paths = [];
-
-        try {
-            requireGlobal.paths.push(require('path').resolve(require('which').sync("npm"), '../node_modules'));
-        } catch (e) {
-            
-        }
-
-        try {
-            requireGlobal.paths.push(require('path').resolve(process.execPath, '../node_modules'));
-        } catch (e) {
-
-        }
-
-        Module.__resolveLookupPaths = Module._resolveLookupPaths;
-        Module._resolveLookupPaths = function (request, parent) {
-            var result = Module.__resolveLookupPaths(request, parent);
-            /^\.[\.\\]/.test(request) || result[1].push.apply(result[1], requireGlobal.paths);
-            return result;
-        };
-    }
-    
-    requireGlobal.paths.push.apply(requireGlobal.paths, arguments);
-
-    for (var i = requireGlobal.paths.length - 1; i > 0; i--) {
-        for (var j = i - 1; j >= 0; j--) {
-            if (requireGlobal.paths[j] == requireGlobal.paths[i]) {
-                requireGlobal.paths.splice(i, 1);
-                break;
-            }
-        }
-    }
-
+	
 }
 
 module.exports = requireGlobal;
