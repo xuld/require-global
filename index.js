@@ -41,20 +41,7 @@ function requireGlobal(paths){
 	
 	var searchPaths = Module._requireGlobal_lookupPaths;
 	if(!searchPaths) {
-		Module._requireGlobal_lookupPaths = searchPaths = [];
-        try {
-			var npmPath = require('path').resolve(require('which').sync("npm"), '../node_modules');
-            searchPaths.push(npmPath);
-        } catch (e) { }
-        try {
-			var npmRc = require('osenv').home() + "/.npmrc";
-			var c = require('fs').readFileSync(npmRc, 'utf-8');
-			var m = /^\s*prefix\s*=(.*)$/m.exec(c);
-			m && searchPaths.push(require('path').join(m[1].trim(), "node_modules"));
-        } catch (e) { }
-        try {
-            searchPaths.push(require('path').resolve(process.execPath, '../node_modules'));
-        } catch (e) { }
+	    Module._requireGlobal_lookupPaths = searchPaths = [require('path').resolve(process.execPath, '../node_modules')];
 		Module.__resolveLookupPaths = Module._resolveLookupPaths;
 		Module._resolveLookupPaths = function(request, parent){
 			var result = Module.__resolveLookupPaths(request, parent);
