@@ -17,7 +17,7 @@ Allow node.js to load global modules from custom paths
 
 --------------------------------------------
 
-令 NodeJs 支持从自定义路径加载模块。
+使 NodeJs 能 require 载入全局安装的模块。
 
 	> npm install -g require-global
 
