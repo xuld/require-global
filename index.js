@@ -34,24 +34,24 @@
  */
 function requireGlobal(paths){
 	var Module = module.constructor;
-	if(!Module._resolveLookupsearchPaths){
+	if(!Module._resolveLookupPaths){
         console.warn("requireGlobal is currently not supported for Nodejs " + process.version);
         return;
 	}
 	
-	var searchPaths = Module._requireGlobal_lookupsearchPaths;
+	var searchPaths = Module._requireGlobal_lookupPaths;
 	if(!searchPaths) {
-		Module._requireGlobal_lookupsearchPaths = searchPaths = [];
+		Module._requireGlobal_lookupPaths = searchPaths = [];
         try {
            searchPaths.push(require('path').resolve(require('which').sync("npm"), '../node_modules'));
         } catch (e) { }
         try {
             searchPaths.push(require('path').resolve(process.execPath, '../node_modules'));
         } catch (e) { }
-		Module.__resolveLookupsearchPaths = Module._resolveLookupsearchPaths;
-		Module._resolveLookupsearchPaths = function(request, parent){
-			var result = Module.__resolveLookupsearchPaths(request, parent);
-			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], Module._requireGlobal_lookupsearchPaths);
+		Module.__resolveLookupPaths = Module._resolveLookupPaths;
+		Module._resolveLookupPaths = function(request, parent){
+			var result = Module.__resolveLookupPaths(request, parent);
+			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], Module._requireGlobal_lookupPaths);
 			return result;
 		};
 	}
