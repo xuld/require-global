@@ -43,7 +43,14 @@ function requireGlobal(paths){
 	if(!searchPaths) {
 		Module._requireGlobal_lookupPaths = searchPaths = [];
         try {
-           searchPaths.push(require('path').resolve(require('which').sync("npm"), '../node_modules'));
+			var npmPath = require('path').resolve(require('which').sync("npm"), '../node_modules');
+            searchPaths.push(npmPath);
+        } catch (e) { }
+        try {
+			var npmRc = require('osenv').home() + "/.npmrc";
+			var c = require('fs').readFileSync(npmRc, 'utf-8');
+			var m = /^\s*prefix\s*=(.*)$/m.exec(c);
+			m && searchPaths.push(m[1].trim());
         } catch (e) { }
         try {
             searchPaths.push(require('path').resolve(process.execPath, '../node_modules'));
