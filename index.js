@@ -45,7 +45,13 @@ function requireGlobal(paths){
 		Module.__resolveLookupPaths = Module._resolveLookupPaths;
 		Module._resolveLookupPaths = function(request, parent){
 			var result = Module.__resolveLookupPaths(request, parent);
-			/^\.[\.\\]/.test(request) || result[1].push.apply(result[1], Module._requireGlobal_lookupPaths);
+            if(!/^\.[\.\\]/.test(request)) {
+                for(var i = 0; i < Module._requireGlobal_lookupPaths.length; i++) {
+                    if(result[1].indexOf(Module._requireGlobal_lookupPaths[i]) < 0) {
+                        result[1].push(Module._requireGlobal_lookupPaths[i]);
+                    }
+                }
+            }
 			return result;
 		};
 	}
