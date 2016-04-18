@@ -42,9 +42,9 @@ function requireGlobal(paths){
 	var searchPaths = Module._requireGlobal_lookupPaths;
 	if(!searchPaths) {
 	    Module._requireGlobal_lookupPaths = searchPaths = [require('path').resolve(process.execPath, '../node_modules')];
-		Module.__resolveLookupPaths = Module._resolveLookupPaths;
+		var resolveLookupPaths = Module._resolveLookupPaths;
 		Module._resolveLookupPaths = function(request, parent){
-			var result = Module.__resolveLookupPaths(request, parent);
+			var result = resolveLookupPaths.call(Module, request, parent);
             if(!/^\.[\.\\]/.test(request)) {
                 for(var i = 0; i < Module._requireGlobal_lookupPaths.length; i++) {
                     if(result[1].indexOf(Module._requireGlobal_lookupPaths[i]) < 0) {
