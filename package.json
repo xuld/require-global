@@ -1,6 +1,6 @@
 {
     "name": "require-global",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "Allow node.js to load global installed modules. | 使 NodeJs 能 require 载入全局安装的模块。",
     "keywords": [
         "require",
