@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 xuld<xuld@vip.qq.com>
+ * Copyright (C) 2015-2016 xuld<xuld@vip.qq.com>
  *
  * Permission is hereby granted, free of charge, to any person 
  * obtaining a copy of this software and associated documentation 
@@ -22,57 +22,49 @@
  *
  */
 
+var Module = module.constructor;
+if (!Module._resolveLookupPaths) {
+	throw new Error("'require-global' is not supported for current Nodejs version: " + process.version);
+}
+
+var globalNodeModules = require('path').resolve(process.execPath, '../node_modules');
+
 // 参考：
 // https://github.com/nodejs/node/blob/master/lib/module.js
 
-/**
- * 使 NodeJs 能 require 载入全局安装的模块。
- * @param {String|Array} paths 设置 require 搜索的路径。默认为 require-global 模块本身所在路径。
- * @example 
- * requireGlobal() // 支持令 require 直接加载 require-global 模块本身所在路径。
- * requireGlobal("D:\\Node\\node_modules") // 支持令 require 加载指定目录下的模块。
- */
-function requireGlobal(paths){
-	var Module = module.constructor;
-	if(!Module._resolveLookupPaths){
-        console.warn("requireGlobal is currently not supported for Nodejs " + process.version);
-        return;
-	}
-	
-	var searchPaths = Module._requireGlobal_lookupPaths;
-	if(!searchPaths) {
-	    Module._requireGlobal_lookupPaths = searchPaths = [require('path').resolve(process.execPath, '../node_modules')];
-		var resolveLookupPaths = Module._resolveLookupPaths;
-		Module._resolveLookupPaths = function(request, parent){
-			var result = resolveLookupPaths.call(Module, request, parent);
-            if(!/^\.[\.\\]/.test(request)) {
-                for(var i = 0; i < Module._requireGlobal_lookupPaths.length; i++) {
-                    if(result[1].indexOf(Module._requireGlobal_lookupPaths[i]) < 0) {
-                        result[1].push(Module._requireGlobal_lookupPaths[i]);
-                    }
-                }
-            }
-			return result;
-		};
-	}
-	
-	if(paths){
-		if(typeof paths === "string"){
-			searchPaths.push(paths);
-		} else {
-			searchPaths.push.apply(searchPaths, paths);
+// 插入函数。
+if (!Module._globalSearchPaths) {
+
+	Module._globalSearchPaths = [];
+
+	var oldResolveLookupPaths = Module._resolveLookupPaths;
+	Module._resolveLookupPaths = function (request, parent) {
+		var result = oldResolveLookupPaths.apply(this, arguments);
+
+		// 如果请求的模块是全局模块，则追加全局搜索路径。
+		if (!/^[\.\\\/]/.test(request) && request.indexOf(':') <= 0 && request.indexOf('//') <= 0) {
+			for (var i = 0; i < Module._globalSearchPaths.length; i++) {
+				var p = Module._globalSearchPaths[i];
+				if (result[1].indexOf(p) < 0) result[1].push(p);
+			}
+
+			if (result[1].indexOf(globalNodeModules) < 0) result[1].push(globalNodeModules);
 		}
-	}
-	
-    for (var i = searchPaths.length - 1; i > 0; i--) {
-        for (var j = i - 1; j >= 0; j--) {
-            if (searchPaths[j] == searchPaths[i]) {
-                searchPaths.splice(i, 1);
-                break;
-            }
-        }
-    }
-	
+
+		return result;
+	};
 }
 
-module.exports = requireGlobal;
+/**
+ * 手动追加搜索的全局路径。
+ * @param {string|string[]} paths 设置 require 搜索的路径。默认为 require-global 模块本身所在路径。
+ * @example 
+ * requireGlobal("D:\\Node\\node_modules") // 支持令 require 加载指定目录下的模块。
+ */
+module.exports = function (paths) {
+	if (typeof paths === "string") {
+		Module._globalSearchPaths.push(paths);
+	} else {
+		Module._globalSearchPaths.push.apply(Module._globalSearchPaths, paths);
+	}
+};
