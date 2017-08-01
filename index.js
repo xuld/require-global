@@ -40,17 +40,16 @@ if (!Module._globalSearchPaths) {
 	var oldResolveLookupPaths = Module._resolveLookupPaths;
 	Module._resolveLookupPaths = function (request, parent) {
 		var result = oldResolveLookupPaths.apply(this, arguments);
-
-		// 如果请求的模块是全局模块，则追加全局搜索路径。
-		if (!/^[\.\\\/]/.test(request) && request.indexOf(':') <= 0 && request.indexOf('//') <= 0) {
-			for (var i = 0; i < Module._globalSearchPaths.length; i++) {
-				var p = Module._globalSearchPaths[i];
-				if (result[1].indexOf(p) < 0) result[1].push(p);
-			}
-
-			if (result[1].indexOf(globalNodeModules) < 0) result[1].push(globalNodeModules);
-		}
-
+		var all = Array.isArray(result[1]) ? result[1] : result;
+        // 仅当请求全局模块时，追加全局搜索路径。
+        if (!/^[\.\/\\]|:/.test(request) && !np.isAbsolute(request)) {
+            for (var i = 0; i < Module._globalSearchPaths.length; i++) {
+            	var path = Module._globalSearchPaths[i];
+                if (all.indexOf(path) < 0) {
+                    all.push(path);
+                }
+            }
+        }
 		return result;
 	};
 }
