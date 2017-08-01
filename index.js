@@ -42,7 +42,7 @@ if (!Module._globalSearchPaths) {
 		var result = oldResolveLookupPaths.apply(this, arguments);
 		var all = Array.isArray(result[1]) ? result[1] : result;
         // 仅当请求全局模块时，追加全局搜索路径。
-        if (!/^[\.\/\\]|:/.test(request) && !np.isAbsolute(request)) {
+        if (!/^[\.\/\\]|:/.test(request) && !require('path').isAbsolute(request)) {
             for (var i = 0; i < Module._globalSearchPaths.length; i++) {
             	var path = Module._globalSearchPaths[i];
                 if (all.indexOf(path) < 0) {
